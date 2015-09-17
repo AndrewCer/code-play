@@ -1,1 +1,1 @@
-# code-play
+# Random Algorithm for Fun
