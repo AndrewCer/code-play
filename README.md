@@ -1,1 +1,2 @@
-# Random Algorithm for Fun
+# Random Algorithms
+Just for fun
