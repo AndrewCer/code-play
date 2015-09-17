@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>game</title>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.js'></script>
+  </head>
+  <body>
+    <h1>Challenge</h1>
+    <label>Computer</label>
+    <input id='computer' type="checkbox" name="name">
+    <p id='bank1' style="color: #F00"></p>
+    <p id='bank2' style="color: #00F"></p>
+    <p id='played1'style="color: #F00"> - </p>
+    <p id='played2'style="color: #00F"> - </p>
+    <input id='player1' style="border: 1px solid #F00" type="password" name="name">
+    <input id='player2' style="border: 1px solid #00F" type="password" name="name">
+    <input id='button' type="button" name="name" value="submit">
+    <div>
+      <div class="score1" style="color: #F00; display:inline-block; margin-right: 120px"></div>
+      <div class="score2" style="color: #00F; display:inline-block"></div>
+    </div>
+    <p id='error'></p>
+    <p id='winner'></p>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var Game = function () {
+          this.playerOne = [1,2,3,4,5,6,7,8,9,10]
+          this.playerTwo = [1,2,3,4,5,6,7,8,9,10]
+          this.playerOnePlayed = []
+          this.playerTwoPlayed = []
+          this.playerOneScore = 0
+          this.playerTwoScore = 0
+          this.computer = false
+        }
+        Game.prototype.reset = function () {
+          this.playerOne = [1,2,3,4,5,6,7,8,9,10]
+          this.playerTwo = [1,2,3,4,5,6,7,8,9,10]
+        }
+        Game.prototype.playTwoPlayer = function () {
+          var val1 = $('#player1').val()
+          var val2 = $('#player2').val()
+          if (this.playerOne.indexOf(Number(val1)) < 0 || this.playerTwo.indexOf(Number(val2)) < 0) {
+            $("#error").text("invalid input").css({"color": "#f00"})
+          } else {
+            $('#player1').val('')
+            $('#player2').val('')
+            this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1)
+            this.playerTwo.splice(this.playerTwo.indexOf(Number(val2)), 1)
+            this.playerOnePlayed.push(val1)
+            this.playerTwoPlayed.push(val2)
+            $('#bank1').text(this.playerOne.join(' '))
+            $('#bank2').text(this.playerTwo.join(' '))
+            $('#played1').text(this.playerOnePlayed.reverse().join(' '))
+            $('#played2').text(this.playerTwoPlayed.reverse().join(' '))
+            if (val1 - val2 == 0) {
+            } else if (val1 - val2 > 1) {
+              this.playerTwoScore++
+            } else if (val1 - val2 == 1) {
+              this.playerOneScore += 2
+            } else if (val1 - val2 == -1) {
+              this.playerTwoScore += 2
+            } else {
+              this.playerOneScore++
+            }
+            $('.score1').text(this.playerOneScore)
+            $('.score2').text(this.playerTwoScore)
+            if (this.playerOneScore >= 5) {
+              $('#winner').text('Player One Wins')
+            } else if (this.playerTwoScore >= 5) {
+              $('#winner').text('Player Two Wins')
+            }
+          }
+        }
+        // ***********************************
+        // AI logic goes here
+        function randomComputer(userArray, compArray) {
+          var randomNum = compArray[Math.floor(Math.random() * compArray.length)]
+          return randomNum
+        }
+        // ***********************************
+  // AI logic goes here
+  Game.prototype.playComputer = function () {
+    var val1 = $('#player1').val()
+    if (this.playerOne.indexOf(Number(val1)) < 0) {
+      $("#error").text("invalid input").css({"color": "#f00"})
+    } else {
+      $('#player1').val('')
+      this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1)
+      // AI function here
+      var val2 = randomComputer(this.playerOne, this.playerTwo)
+      this.playerTwo.splice(this.playerTwo.indexOf(val2), 1)
+      this.playerOnePlayed.push(val1)
+      this.playerTwoPlayed.push(val2)
+      $('#bank1').text(this.playerOne.join(' '))
+      $('#bank2').text(this.playerTwo.join(' '))
+      $('#played1').text(this.playerOnePlayed.reverse().join(' '))
+      $('#played2').text(this.playerTwoPlayed.reverse().join(' '))
+      if (val1 - val2 == 0) {
+      } else if (val1 - val2 > 1) {
+        this.playerTwoScore++
+      } else if (val1 - val2 == 1) {
+        this.playerOneScore += 2
+      } else if (val1 - val2 == -1) {
+        this.playerTwoScore += 2
+      } else {
+        this.playerOneScore++
+      }
+      $('.score1').text(this.playerOneScore)
+      $('.score2').text(this.playerTwoScore)
+      if (this.playerOneScore >= 5) {
+        $('#winner').text('Player One Wins')
+      } else if (this.playerTwoScore >= 5) {
+        $('#winner').text('Player Two Wins')
+      }
+    }
+  }
+        // Game.prototype.playComputer = function () {
+        //   var val1 = $('#player1').val()
+        // }
+        var game = new Game();
+        $('#bank1').text(game.playerOne.join(' '))
+        $('#bank2').text(game.playerTwo.join(' '))
+        $('.score1').text(game.playerOneScore)
+        $('.score2').text(game.playerTwoScore)
+        $('#computer').click(function () {
+          game.computer = !game.computer
+          if (game.computer) {
+            $('#player2').css({"display": "none"})
+            $('#player2').css({"display": "none"})
+          } else {
+            $('#player2').css({"display": "inline"})
+            $('#player2').css({"display": "inline"})
+          }
+        })
+        $('#button').click(function () {
+          if (!game.computer) {
+            game.playTwoPlayer()
+          } else {
+            game.playComputer()
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
